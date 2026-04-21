@@ -376,7 +376,7 @@ def render_match_details_table(results):
             f"<td class='muted'>{safe_text(r.matched_variation or '—')}</td>"
             "</tr>"
         )
-        st.markdown(
+    st.markdown(
         """
         <div class="preview-controls" aria-hidden="true">
           <div class="preview-icon" title="Search">🔎</div>

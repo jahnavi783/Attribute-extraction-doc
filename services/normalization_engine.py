@@ -39,8 +39,15 @@ class NormalizationEngine:
     def _normalize_records(self, records: list[dict], fuzzy_threshold: float, semantic_threshold: float):
         normalized = []
         match_results = []
+        cache = {}
         for rec in records:
-            canonical, result = self._norm_attr(str(rec.get('attribute','')), fuzzy_threshold, semantic_threshold)
+            raw_attr = str(rec.get("attribute", "")).strip()
+            cache_key = raw_attr.lower()
+            if cache_key in cache:
+                canonical, result = cache[cache_key]
+            else:
+                canonical, result = self._norm_attr(str(rec.get('attribute','')), fuzzy_threshold, semantic_threshold)
+                cache[cache_key] = (canonical, result)
             match_results.append(result)
             normalized.append({"attribute": canonical, "value": rec.get('value','')})
         return normalized, match_results

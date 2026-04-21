@@ -248,14 +248,24 @@
     {
       "canonical": "Payment Method",
       "variations": [
-        "Payment method",
+        "Payment Method",
         "Pay Method",
+        "Payment method",
+        "Method of Payment",
         "Mode of Payment",
         "Payment Mode",
         "Payment Type",
         "Pay Type",
-        "Method of Payment",
-        "Transaction Method"
+        "Transaction Method",
+        "Method of Paymment",
+        "Method of Paymant",
+        "Method Payment",
+        "Payment Methd",
+        "Payment Methdo",
+        "Paymnt Method",
+        "Method Of Payment",
+        "paymentmethod",
+        "PaymentMethod"
       ]
     },
     {
@@ -403,6 +413,213 @@
         "Electronic Mail",
         "Contact Email",
         "Email Id"
+      ]
+    },
+    {
+      "canonical": "Status",
+      "variations": [
+        "Status",
+        "stat",
+        "sts",
+        "Current Status",
+        "State",
+        "Stage",
+        "Condition",
+        "Progress",
+        "Phase",
+        "Work Status",
+        "Employee Status",
+        "Emp Status",
+        "User Status",
+        "Record Status",
+        "Account Status",
+        "Activation Status",
+        "System Status",
+        "Leave Status",
+        "leave",
+        "Attendance Status",
+        "Approval Status",
+        "Ticket Status",
+        "Request Status",
+        "Service Status"
+      ]
+    },
+
+    {
+      "canonical": "Maintenance Status",
+      "variations": [
+        "maintenance_status",
+        "Maintenance Status",
+        "Service Status",
+        "MaintenanceStatus",
+        "maintenace_status",
+        "Maintenancce Status",
+        "Maintenance Stattus",
+        "Maintenance Stats",
+        "Maintenane Status",
+        "Maintenance Satus",
+        "MaintenanceS tatus",
+        "Mintenance Status",
+        "Maxntenance Status",
+        "maintenance_staatus",
+        "maintenance_tsatus",
+        "mintenance_status"
+      ]
+    },
+
+    {
+      "canonical": "Payment Method",
+      "variations": [
+        "Payment method",
+        "Pay Method",
+        "Mode of Payment",
+        "Payment Mode",
+        "Payment Type",
+        "Pay Type",
+        "Method of Payment",
+        "Transaction Method",
+        "PaymentMethod",
+        "Payment methdo",
+        "Mtehod of Payment",
+        "Mod of Payment"
+      ]
+    },
+
+    {
+      "canonical": "Fuel Type",
+      "variations": [
+        "fuel_type",
+        "Fuel Type",
+        "fuel_typ",
+        "FuelType",
+        "Fuel Tyep",
+        "Fuel Tpye",
+        "Fule Type",
+        "Fuell Type",
+        "FuelT ype",
+        "FuelLEfficiency",
+        "fuuel_type",
+        "fuell_type",
+        "fuuel_typ",
+        "fuel_ttyp",
+        "fue_ltype",
+        "Fuep Type",
+        "Fuel TyVe",
+        "Fel Type",
+        "FuBl Type",
+        "FVel Type"
+      ]
+    },
+
+    {
+      "canonical": "Model Number",
+      "variations": [
+        "Model No",
+        "Model Number",
+        "Model",
+        "Model ID",
+        "model_no",
+        "model_number",
+        "ModelNumber",
+        "Mode lNumber",
+        "modeln_o",
+        "Model lumber",
+        "Mddel"
+      ]
+    },
+
+    {
+      "canonical": "Machine Type",
+      "variations": [
+        "Machine Type",
+        "machine_type",
+        "Equipment Type",
+        "Asset Type",
+        "Device Type",
+        "MachineType",
+        "machinetype",
+        "machinet_ype",
+        "machineBtype"
+      ]
+    },
+
+    {
+      "canonical": "Delivery Status",
+      "variations": [
+        "Delivery stat",
+        "Delivery Status",
+        "Shipment Status",
+        "Dispatch Status",
+        "Delivery State",
+        "Shipping Status",
+        "Transit Status",
+        "Consignment Status",
+        "DeliveryStatus",
+        "Delivery Satus",
+        "Delivery tSatus",
+        "DelivSry stat",
+        "DelOvery stat",
+        "DeYivery stat",
+        "Delivvery stat",
+        "Delivery Stae"
+      ]
+    },
+
+    {
+      "canonical": "Shipping Address",
+      "variations": [
+        "Shipping add",
+        "Ship To Address",
+        "Delivery Address",
+        "Ship To",
+        "Shipping Address",
+        "Deliver To",
+        "Delivery Location",
+        "Consignee Address",
+        "Drop Address",
+        "Recipient Address",
+        "ShippingAddress",
+        "Shippingadd",
+        "Shipping xdd",
+        "Ship ToAddress"
+      ]
+    },
+
+    {
+      "canonical": "Order Number",
+      "variations": [
+        "Order No",
+        "Order no",
+        "Order ID",
+        "Order #",
+        "Sales Order Number",
+        "SO Number",
+        "SO No",
+        "SO#",
+        "Sale Order No",
+        "Sales Order No",
+        "Purchase Order Number",
+        "PO Number",
+        "PO No",
+        "Purchase Order No",
+        "PO#",
+        "Order Ref",
+        "Order Reference",
+        "PurchaseOrderNo",
+        "PONo"
+      ]
+    },
+
+    {
+      "canonical": "Maintenance Date",
+      "variations": [
+        "Maintenance Date",
+        "maintenance_date",
+        "Service Date",
+        "Last Service Date",
+        "LastServiceDate",
+        "Last ervice Date",
+        "ServiceDate"
       ]
     },
     {
@@ -571,58 +788,31 @@
     },
     {
       "canonical": "Vehicle Type",
-      "variations": [
-        "vehicle_type",
-        "Vehicle Type"
-      ]
+      "variations": ["vehicle_type", "Vehicle Type"]
     },
     {
       "canonical": "Fuel Type",
-      "variations": [
-        "fuel_type",
-        "Fuel Type",
-        "fuel_typ"
-      ]
+      "variations": ["fuel_type", "Fuel Type", "fuel_typ"]
     },
     {
       "canonical": "Engine Capacity (CC)",
-      "variations": [
-        "engine_capacity_cc",
-        "Engine Capacity",
-        "Engine CC"
-      ]
+      "variations": ["engine_capacity_cc", "Engine Capacity", "Engine CC"]
     },
     {
       "canonical": "Mileage (KMPL)",
-      "variations": [
-        "mileage_kmpl",
-        "Mileage",
-        "Fuel Efficiency"
-      ]
+      "variations": ["mileage_kmpl", "Mileage", "Fuel Efficiency"]
     },
     {
       "canonical": "Transmission",
-      "variations": [
-        "transmission",
-        "Gear Type",
-        "Transmission Type"
-      ]
+      "variations": ["transmission", "Gear Type", "Transmission Type"]
     },
     {
       "canonical": "Ownership Type",
-      "variations": [
-        "ownership_type",
-        "Ownership Type",
-        "ownership_typ"
-      ]
+      "variations": ["ownership_type", "Ownership Type", "ownership_typ"]
     },
     {
       "canonical": "Insurance Status",
-      "variations": [
-        "insurance_status",
-        "Insurance Status",
-        "insurance_stat"
-      ]
+      "variations": ["insurance_status", "Insurance Status", "insurance_stat"]
     }
   ]
 }
