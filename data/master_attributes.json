@@ -219,6 +219,17 @@
       ]
     },
     {
+      "canonical": "Delivery City",
+      "variations": [
+        "City",
+        "Delivery City",
+        "Ship City",
+        "Destination City",
+        "Customer City",
+        "delivery_city"
+      ]
+    },
+    {
       "canonical": "Order Status",
       "variations": [
         "Order status",

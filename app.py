@@ -376,15 +376,15 @@ def render_match_details_table(results):
             f"<td class='muted'>{safe_text(r.matched_variation or '—')}</td>"
             "</tr>"
         )
-    st.markdown(
-        """
-        <div class="preview-controls" aria-hidden="true">
-          <div class="preview-icon" title="Search">🔎</div>
-          <div class="preview-icon" title="Expand">⤢</div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+    # st.markdown(
+    #     """
+    #     <div class="preview-controls" aria-hidden="true">
+    #       <div class="preview-icon" title="Search">🔎</div>
+    #       <div class="preview-icon" title="Expand">⤢</div>
+    #     </div>
+    #     """,
+    #     unsafe_allow_html=True,
+    # )
     st.markdown(
         f"""
         <div class="table-wrap">
@@ -410,15 +410,15 @@ def render_match_details_table(results):
 
 
 def render_preview_table(df: pd.DataFrame):
-    st.markdown(
-        """
-        <div class="preview-controls" aria-hidden="true">
-          <div class="preview-icon" title="Search">🔎</div>
-          <div class="preview-icon" title="Expand">⤢</div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+    # st.markdown(
+    #     """
+    #     <div class="preview-controls" aria-hidden="true">
+    #       <div class="preview-icon" title="Search">🔎</div>
+    #       <div class="preview-icon" title="Expand">⤢</div>
+    #     </div>
+    #     """,
+    #     unsafe_allow_html=True,
+    # )
     render_theme_table(df, table_id="normalized-preview", max_height=520, canonical_cols=["Output Attribute"])
 
 
@@ -492,7 +492,7 @@ st.markdown(
     """
     <div class="main-header">
       <h1>Document Attribute Normalization System</h1>
-      <p>Upload PDF, Excel, or CSV files and map raw attribute names into clean canonical master attributes.</p>
+      <p>Upload PDF, Excel, CSV or DOCX files and map raw attribute names into clean canonical master attributes.</p>
     </div>
     """,
     unsafe_allow_html=True,
@@ -501,23 +501,43 @@ st.markdown(
 st.markdown('<div class="section-title">📂 Upload Document</div>', unsafe_allow_html=True)
 uploaded = st.file_uploader(
     "Upload a document to get started",
-    type=["pdf", "xlsx", "xls", "csv"],
-    help="Supports PDF, XLSX, XLS, and CSV.",
+    type=["pdf", "xlsx", "xls", "csv", "docx"],
+    help="Supports PDF, XLSX, XLS, CSV, and DOCX.",
 )
 
 if uploaded:
     engine = get_engine()
-    with st.spinner("Extracting attributes and applying normalization..."):
-        try:
-            report: NormalizationReport = engine.process(
-                io.BytesIO(uploaded.read()),
-                uploaded.name,
-                fuzzy_threshold=float(fuzzy_threshold),
-                semantic_threshold=float(semantic_threshold),
-            )
-        except Exception as e:
-            st.error(f"Processing failed: {e}")
-            st.stop()
+
+    file_bytes = uploaded.getvalue()
+    current_key = (
+        uploaded.name,
+        len(file_bytes),
+        float(fuzzy_threshold),
+        float(semantic_threshold),
+    )
+
+    if "last_run_key" not in st.session_state:
+        st.session_state.last_run_key = None
+
+    if "last_report" not in st.session_state:
+        st.session_state.last_report = None
+
+    if st.session_state.last_run_key != current_key:
+        with st.spinner("Extracting attributes and applying normalization..."):
+            try:
+                report: NormalizationReport = engine.process(
+                    io.BytesIO(file_bytes),
+                    uploaded.name,
+                    fuzzy_threshold=float(fuzzy_threshold),
+                    semantic_threshold=float(semantic_threshold),
+                )
+                st.session_state.last_report = report
+                st.session_state.last_run_key = current_key
+            except Exception as e:
+                st.error(f"Processing failed: {e}")
+                st.stop()
+
+    report: NormalizationReport = st.session_state.last_report
 
     match_counts = {}
     for r in report.match_details:
@@ -572,9 +592,9 @@ if uploaded:
         render_match_details_table(unique_results)
         unmatched = [r for r in unique_results if r.match_type == "unmatched"]
         if unmatched:
-            st.markdown('<div class="section-title">⚠️ Unmatched Attributes</div>', unsafe_allow_html=True)
+            st.markdown('<div class="section-title">⚠️ Unmatched Attributes (has no confident canonical match yet.)</div>', unsafe_allow_html=True)
             for r in unmatched:
-                st.warning(f"{r.raw_attr} has no confident canonical match yet. Add it to the master attribute list if needed.")
+                st.warning(f"{r.raw_attr}")
 
     with tab_analytics:
         st.markdown('<div class="section-title">Match Type Distribution</div>', unsafe_allow_html=True)
@@ -606,6 +626,7 @@ if uploaded:
             "pdf": "application/pdf",
             "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             "csv": "text/csv",
+            "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         }
         out_name = Path(uploaded.name).stem + "_normalized." + report.output_ext
         st.download_button(
@@ -633,7 +654,7 @@ else:
             <div style="font-size:4rem; line-height:1;">📁</div>
             <h2 style="margin:0.9rem 0 0.4rem; color:{PRIMARY_DEEP};">Upload a document to get started</h2>
             <p style="max-width:620px; margin:0 auto; color:{TEXT_MUTE}; font-size:1.05rem;">
-              Supports PDF, Excel (.xlsx/.xls), and CSV files. Raw attribute names are mapped to canonical master attributes using exact, synonym, fuzzy, and semantic matching.
+              Supports PDF, Excel (.xlsx/.xls), CSV, and DOCX files. Raw attribute names are mapped to canonical master attributes using exact, synonym, fuzzy, and semantic matching.
             </p>
           </div>
         </div>
