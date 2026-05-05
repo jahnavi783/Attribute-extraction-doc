@@ -15,7 +15,11 @@
         "Biling entity",
         "Billing Entity",
         "Billed To",
-        "Bill To"
+        "Bill To",
+        "customer cust nm",
+        "customer name",
+        "cust nm",
+        "cust name"
       ]
     },
     {
@@ -63,6 +67,8 @@
         "Sale Date",
         "Transaction Date",
         "Date Ordered",
+        "order date",
+        "order details order date",
         "Placed On",
         "Booking Date",
         "Issue Date",
@@ -158,7 +164,14 @@
         "Sum Total",
         "Total Due",
         "Total Amount",
-        "Order Amount"
+        "Order Amount",
+        "order amount total",
+        "amount total",
+        "total amount",
+        "total",
+        "order block amt total",
+        "amt total",
+        "amount total"
       ]
     },
     {
@@ -173,7 +186,8 @@
         "Delivery Fee",
         "Transport Cost",
         "Logistics Cost",
-        "Courier Charge"
+        "Courier Charge",
+        "Shipping"
       ]
     },
     {
@@ -226,7 +240,9 @@
         "Ship City",
         "Destination City",
         "Customer City",
-        "delivery_city"
+        "delivery_city",
+        "delivery city",
+        "city"
       ]
     },
     {
@@ -253,8 +269,20 @@
         "Pay Stat",
         "Invoice Status",
         "Settlement Status",
-        "Payment Stage"
+        "Payment Stage",
+        "order payment status",
+        "payment status",
+        "order block pay status",
+        "pay status"
       ]
+    },
+    {
+      "canonical": "Transaction ID",
+      "variations": ["order block pay txn", "pay txn", "txn"]
+    },
+    {
+      "canonical": "Transaction ID",
+      "variations": ["order block pay txn", "pay txn", "txn"]
     },
     {
       "canonical": "Payment Method",
@@ -276,7 +304,12 @@
         "Paymnt Method",
         "Method Of Payment",
         "paymentmethod",
-        "PaymentMethod"
+        "PaymentMethod",
+        "order payment mode",
+        "payment mode",
+        "payment method",
+        "order block pay mode",
+        "pay mode"
       ]
     },
     {
@@ -345,7 +378,15 @@
         "Count",
         "No. of Items",
         "Item Count",
-        "Volume"
+        "Volume",
+        "order items item qty",
+        "qty",
+        "quantity",
+        "order block items 1 qty",
+        "order block items 2 qty",
+        "items qty",
+        "item qty",
+        "qty"
       ]
     },
     {
@@ -354,11 +395,19 @@
         "Item Name",
         "Product",
         "Item",
+        "order items item name",
+        "product name",
+        "item name",
         "Product Description",
         "Item Description",
         "Service Name",
         "Material Name",
-        "Part Name"
+        "Part Name",
+        "order block items 1 prod",
+        "order block items 2 prod",
+        "items prod",
+        "item prod",
+        "prod"
       ]
     },
     {
@@ -411,7 +460,10 @@
         "Contact",
         "Mobile Number",
         "Cell",
-        "Ph No"
+        "Ph No",
+        "customer phone",
+        "phone",
+        "phone number"
       ]
     },
     {
@@ -423,7 +475,10 @@
         "Email ID",
         "Electronic Mail",
         "Contact Email",
-        "Email Id"
+        "Email Id",
+        "customer email",
+        "email",
+        "email address"
       ]
     },
     {
@@ -606,6 +661,9 @@
         "Sales Order Number",
         "SO Number",
         "SO No",
+        "order ref",
+        "order reference",
+        "order number",
         "SO#",
         "Sale Order No",
         "Sales Order No",

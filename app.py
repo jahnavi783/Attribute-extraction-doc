@@ -501,8 +501,8 @@ st.markdown(
 st.markdown('<div class="section-title">📂 Upload Document</div>', unsafe_allow_html=True)
 uploaded = st.file_uploader(
     "Upload a document to get started",
-    type=["pdf", "xlsx", "xls", "csv", "docx"],
-    help="Supports PDF, XLSX, XLS, CSV, and DOCX.",
+    type=["pdf", "xlsx", "xls", "csv", "docx", "json", "xml"],
+    help="Supports PDF, XLSX, XLS, CSV, DOCX, JSON, and XML.",
 )
 
 if uploaded:
@@ -627,6 +627,8 @@ if uploaded:
             "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             "csv": "text/csv",
             "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "json": "application/json",
+            "xml": "application/xml",
         }
         out_name = Path(uploaded.name).stem + "_normalized." + report.output_ext
         st.download_button(

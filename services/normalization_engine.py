@@ -21,6 +21,8 @@ from utils.file_parsers import (
     parse_excel,
     parse_csv,
     parse_docx,
+    parse_json,
+    parse_xml,
     extract_kv_from_excel_sheet,
     extract_structured_records_from_excel_sheet,
     extract_structured_records_from_csv_df,
@@ -28,14 +30,19 @@ from utils.file_parsers import (
     extract_raw_text_from_excel,
     extract_raw_text_from_csv,
     extract_raw_text_from_docx,
+    extract_raw_text_from_json,
+    extract_raw_text_from_xml,
     parse_unstructured_text,
     should_use_llm_for_text,
+
 )
 from utils.file_writers import (
     write_pdf_keyvalue,
     write_excel_keyvalue,
     write_csv_records,
     write_docx_keyvalue,
+    write_json_records,
+    write_xml_records,
 )
 
 
@@ -188,7 +195,54 @@ class NormalizationEngine:
             output_bytes=out,
             output_ext="docx",
     )
-    
+    def process_json(
+        self,
+        file: io.BytesIO,
+        filename: str,
+        fuzzy_threshold: float = DEFAULT_FUZZY_THRESHOLD,
+        semantic_threshold: float = DEFAULT_SEMANTIC_THRESHOLD,
+    ) -> NormalizationReport:
+        file.seek(0)
+        records, doc_type = parse_json(file)
+        norm_records, all_results = self._normalize_records(
+            records,
+            fuzzy_threshold,
+            semantic_threshold,
+        )
+        out = write_json_records(norm_records)
+        return self._finalize_report(
+        input_format="json",
+        doc_type=doc_type,
+        normalized_records=norm_records,
+        match_results=all_results,
+        output_bytes=out,
+        output_ext="json",
+    )
+
+
+    def process_xml(
+        self,
+        file: io.BytesIO,
+        filename: str,
+        fuzzy_threshold: float = DEFAULT_FUZZY_THRESHOLD,
+        semantic_threshold: float = DEFAULT_SEMANTIC_THRESHOLD,
+    ) -> NormalizationReport:
+        file.seek(0)
+        records, doc_type = parse_xml(file)
+        norm_records, all_results = self._normalize_records(
+            records,
+            fuzzy_threshold,
+            semantic_threshold,
+        )
+        out = write_xml_records(norm_records)
+        return self._finalize_report(
+        input_format="xml",
+        doc_type=doc_type,
+        normalized_records=norm_records,
+        match_results=all_results,
+        output_bytes=out,
+        output_ext="xml",
+    )
 
     def process_excel(
         self,
@@ -305,5 +359,10 @@ class NormalizationEngine:
             return self.process_csv(file, filename, fuzzy_threshold, semantic_threshold)
         elif ext == ".docx":
             return self.process_docx(file, filename, fuzzy_threshold, semantic_threshold)
+        elif ext == ".json":
+            return self.process_json(file, filename, fuzzy_threshold, semantic_threshold)
+        elif ext == ".xml":
+            return self.process_xml(file, filename, fuzzy_threshold, semantic_threshold)
 
         raise ValueError(f"Unsupported file type: {ext}")
+    

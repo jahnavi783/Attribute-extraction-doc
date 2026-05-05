@@ -19,6 +19,8 @@ from docx.shared import Pt, Inches, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.table import WD_TABLE_ALIGNMENT, WD_CELL_VERTICAL_ALIGNMENT
 from docx.oxml.ns import qn
+import json
+import xml.etree.ElementTree as ET
 
 PRIMARY = "#0B7A75"
 PRIMARY_DARK = "#084C61"
@@ -373,3 +375,74 @@ def write_csv(df: pd.DataFrame) -> bytes:
 def write_csv_records(records: list[dict]) -> bytes:
     df = _records_to_output_df(records)
     return write_csv(df)
+def write_json_records(records: list[dict]) -> bytes:
+    output = []
+
+    for rec in records:
+        output.append({
+            "attribute": rec.get("attribute", ""),
+            "value": rec.get("value", "")
+        })
+
+    return json.dumps(output, indent=2, ensure_ascii=False).encode("utf-8")
+
+
+# def write_xml_records(records: list[dict]) -> bytes:
+#     root = ET.Element("normalized_records")
+
+#     for rec in records:
+#         item = ET.SubElement(root, "record")
+
+#         attr = ET.SubElement(item, "attribute")
+#         attr.text = str(rec.get("attribute", ""))
+
+#         value = ET.SubElement(item, "value")
+#         value.text = str(rec.get("value", ""))
+
+#     tree = ET.ElementTree(root)
+#     buf = io.BytesIO()
+#     tree.write(buf, encoding="utf-8", xml_declaration=True)
+#     return buf.getvalue()
+def write_xml_records(records: list[dict]) -> bytes:
+    import xml.etree.ElementTree as ET
+    import io
+
+    root = ET.Element("normalized_records")
+
+    for rec in records:
+        attr = str(rec.get("attribute", "")).strip()
+        value = str(rec.get("value", "")).strip()
+
+        if not attr:
+            continue
+
+        # Convert attribute into path
+        # Example: data.customer.name → ["data", "customer", "name"]
+        parts = attr.replace(" ", "_").split(".")
+
+        current = root
+
+        # Traverse or create nodes
+        for i, part in enumerate(parts):
+            tag = part.lower()
+
+            # last part → value node
+            if i == len(parts) - 1:
+                el = ET.SubElement(current, tag)
+                el.text = value
+            else:
+                # find existing node or create
+                found = None
+                for child in current:
+                    if child.tag == tag:
+                        found = child
+                        break
+
+                if not found:
+                    found = ET.SubElement(current, tag)
+
+                current = found
+
+    buf = io.BytesIO()
+    ET.ElementTree(root).write(buf, encoding="utf-8", xml_declaration=True)
+    return buf.getvalue()

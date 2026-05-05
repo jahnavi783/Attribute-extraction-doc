@@ -22,6 +22,7 @@ import pdfplumber
 import pandas as pd
 from typing import Union
 from docx import Document
+import xml.etree.ElementTree as ET
 
 
 _SKIP_PATTERNS = re.compile(
@@ -263,6 +264,7 @@ def _simple_free_text_fallback(text: str) -> list[dict]:
     Uses safe regex rules for common fields.
     """
     records = []
+    
 
     for line in text.splitlines():
         line = line.strip()
@@ -754,8 +756,10 @@ def parse_pdf(file: Union[str, io.BytesIO]) -> tuple[list[dict], str]:
 
         # Final routing decision
         if is_likely_unstructured_text(raw_text):
-            if not records:
-                doc_type = "unstructured"
+            # if not records:
+            records = []
+            doc_type = "unstructured"
+        
 
     return records, doc_type
 
@@ -827,6 +831,86 @@ def parse_docx(file: Union[str, io.BytesIO]) -> tuple[list[dict], str]:
         doc_type = "unstructured"
 
     return records, doc_type
+def _flatten_json_to_records(data, parent_key="") -> list[dict]:
+    records = []
+
+    if isinstance(data, dict):
+        for key, value in data.items():
+            full_key = f"{parent_key}.{key}" if parent_key else str(key)
+
+            if isinstance(value, (dict, list)):
+                records.extend(_flatten_json_to_records(value, full_key))
+            else:
+                records.append({
+                    "attribute":  _friendly_attr_from_path(full_key),
+                    "value": "" if value is None else str(value),
+                    "raw_attribute": full_key
+                })
+
+    elif isinstance(data, list):
+        for idx, item in enumerate(data, start=1):
+            list_key = f"{parent_key}_{idx}" if parent_key else f"item_{idx}"
+            records.extend(_flatten_json_to_records(item, list_key))
+
+    return _dedupe_records(records)
+
+
+def parse_json(file: Union[str, io.BytesIO]) -> tuple[list[dict], str]:
+    file.seek(0)
+    raw = file.read() if hasattr(file, "read") else open(file, "rb").read()
+    text = raw.decode("utf-8", errors="ignore")
+
+    data = json.loads(text)
+    records = _flatten_json_to_records(data)
+
+    return records, "json"
+
+
+def extract_raw_text_from_json(file: Union[str, io.BytesIO]) -> str:
+    raw = file.read() if hasattr(file, "read") else open(file, "rb").read()
+    return raw.decode("utf-8", errors="ignore")
+
+
+def _flatten_xml_element(elem, parent_key="") -> list[dict]:
+    records = []
+    tag_path = f"{parent_key}.{elem.tag}" if parent_key else elem.tag
+
+    for attr_key, attr_val in elem.attrib.items():
+        raw_path = f"{tag_path}.{attr_key}"
+
+        records.append({
+            "attribute": _friendly_attr_from_path(raw_path),  # ✅ FIX
+            "value": attr_val,
+            "raw_attribute": raw_path
+        })
+
+    text = (elem.text or "").strip()
+    if text:
+        records.append({
+            "attribute": _friendly_attr_from_path(tag_path),  # ✅ FIX
+            "value": text,
+            "raw_attribute": tag_path
+        })
+
+    for child in list(elem):
+        records.extend(_flatten_xml_element(child, tag_path))
+
+    return records
+
+
+
+def parse_xml(file: Union[str, io.BytesIO]) -> tuple[list[dict], str]:
+    file.seek(0)
+    raw = file.read() if hasattr(file, "read") else open(file, "rb").read()
+    root = ET.fromstring(raw)
+
+    records = _flatten_xml_element(root)
+    return _dedupe_records(records), "xml"
+
+
+def extract_raw_text_from_xml(file: Union[str, io.BytesIO]) -> str:
+    raw = file.read() if hasattr(file, "read") else open(file, "rb").read()
+    return raw.decode("utf-8", errors="ignore")
 
 def parse_excel(file: Union[str, io.BytesIO]) -> tuple[dict[str, pd.DataFrame], str]:
     xl = pd.read_excel(file, sheet_name=None, header=None, dtype=str)
@@ -838,6 +922,7 @@ def parse_excel(file: Union[str, io.BytesIO]) -> tuple[dict[str, pd.DataFrame], 
         if not df.empty:
             sheets[sheet_name] = df
     return sheets, "keyvalue"
+
 
 
 def extract_kv_from_excel_sheet(df: pd.DataFrame) -> list[dict]:
@@ -879,3 +964,18 @@ def parse_csv(file: Union[str, io.BytesIO]) -> tuple[pd.DataFrame, str]:
     df = pd.read_csv(file, header=None, dtype=str).fillna("")
     df = df[df.apply(lambda row: any(_clean_cell(v) for v in row), axis=1)].reset_index(drop=True)
     return df, "keyvalue"
+
+def _friendly_attr_from_path(path: str) -> str:
+    path = str(path or "").strip()
+    parts = path.split(".")
+    parts = [p for p in parts if p.lower() not in ("data", "root", "record", "records")]
+
+    cleaned_parts = []
+    for part in parts:
+        part = part.replace("_", " ").replace("-", " ")
+        part = re.sub(r"([a-z])([A-Z])", r"\1 \2", part)
+        part = part.lower().strip()
+        if part:
+            cleaned_parts.append(part)
+
+    return " ".join(cleaned_parts).strip()
