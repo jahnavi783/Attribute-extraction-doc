@@ -492,7 +492,7 @@ st.markdown(
     """
     <div class="main-header">
       <h1>Document Attribute Normalization System</h1>
-      <p>Upload PDF, Excel, CSV or DOCX files and map raw attribute names into clean canonical master attributes.</p>
+      <p>Upload PDF, Excel, CSV, XML, JSON or DOCX files and map raw attribute names into clean canonical master attributes.</p>
     </div>
     """,
     unsafe_allow_html=True,
